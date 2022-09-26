@@ -6,19 +6,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
-public class Program extends Application {
+public class Main extends Application {
+    
+    private static Scene mainScane;
     
     @Override
     public void start(Stage stage) throws Exception {
-        ScrollPane scrollPane = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        ScrollPane scrollPane = FXMLLoader.load(getClass().getResource("/gui/MainView.fxml"));
         
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         
-        Scene scene = new Scene(scrollPane);
+        mainScane = new Scene(scrollPane);
         
-        stage.setScene(scene);
+        stage.setScene(mainScane);
         stage.show();
+    }
+    
+    public static Scene getMainScene() {
+        return mainScane;
     }
 
     public static void main(String[] args) {
