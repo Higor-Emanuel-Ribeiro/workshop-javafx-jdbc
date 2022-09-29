@@ -25,6 +25,7 @@ import model.services.DepartmentService;
 import workshop.javafx.jdbc.Main;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.event.EventType;
 
 public class departmentlistController implements Initializable{
     
@@ -47,7 +48,8 @@ public class departmentlistController implements Initializable{
      @FXML
     public void onBtNewAction(ActionEvent event) {
         Stage parentStage = Utils.currentStage(event);
-        createDialogForm("/gui/DepartmentForm.fxml", parentStage);
+        Department obj = new Department();
+        createDialogForm(obj, "/gui/DepartmentForm.fxml", parentStage);
     }
 
     public void setDepartmentService(DepartmentService service) {
@@ -55,7 +57,7 @@ public class departmentlistController implements Initializable{
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL url, ResourceBundle rb) {
         inicializeNodes();
     } 
 
@@ -77,10 +79,14 @@ public class departmentlistController implements Initializable{
         tableViewDepartment.setItems(obsList);
     }
     
-    private void createDialogForm(String absolteName, Stage parentStage) {
+    private void createDialogForm(Department obj, String absolteName, Stage parentStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absolteName));
             AnchorPane anchorPane = loader.load();
+            
+            DepartmentFormController controller = loader.getController();
+            controller.setDepartment(obj);
+            controller.updateFormData();
             
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Enter Department data");
