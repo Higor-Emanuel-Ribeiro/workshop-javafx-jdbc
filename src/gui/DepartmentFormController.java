@@ -1,7 +1,13 @@
 package gui;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
+import gui.util.Constraints;
+import gui.util.Utils;
+import model.entities.Department;
+import model.services.DepartmentService;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -9,13 +15,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
-import gui.util.Constraints;
-import gui.util.Utils;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
-import model.entities.Department;
-import model.services.DepartmentService;
 
 public class DepartmentFormController implements Initializable{
     
@@ -23,6 +26,8 @@ public class DepartmentFormController implements Initializable{
     
     private DepartmentService service;
     
+    private final List<DataChangeListener> dataChangeListener = new ArrayList<>();
+            
     @FXML
     private TextField txtId;
     
@@ -45,6 +50,10 @@ public class DepartmentFormController implements Initializable{
     public void setService(DepartmentService service) {
         this.service = service;
     }
+    
+    public void subscribeDataChangeListener(DataChangeListener listener) {
+        dataChangeListener.add(listener);
+    }
 
     @FXML
     public void onBtSaveAction(ActionEvent event) {
@@ -57,6 +66,7 @@ public class DepartmentFormController implements Initializable{
         try {   
             department = getFormData();
             service.saveOrUpdate(department);
+            notifyDataChangeListeners();
             Utils.currentStage(event).close();
         } 
         catch (DbException e) {
@@ -94,5 +104,11 @@ public class DepartmentFormController implements Initializable{
         obj.setName(txtName.getText());
         
         return obj;
+    }
+
+    private void notifyDataChangeListeners() {
+        for (DataChangeListener listeners: dataChangeListener) {
+            listeners.onDataChanged();
+        }
     }
 }
