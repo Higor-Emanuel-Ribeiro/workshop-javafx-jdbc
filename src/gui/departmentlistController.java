@@ -25,7 +25,6 @@ import model.services.DepartmentService;
 import workshop.javafx.jdbc.Main;
 import gui.util.Alerts;
 import gui.util.Utils;
-import javafx.event.EventType;
 
 public class departmentlistController implements Initializable{
     
@@ -86,6 +85,7 @@ public class departmentlistController implements Initializable{
             
             DepartmentFormController controller = loader.getController();
             controller.setDepartment(obj);
+            controller.setService(new DepartmentService());
             controller.updateFormData();
             
             Stage dialogStage = new Stage();
